@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f7fb">
+<title>Commercial Property Notes</title>
+<style>
+:root{
+  --bg:#f5f7fb; --card:#fff; --text:#172033; --muted:#697386;
+  --line:#dfe4ec; --accent:#1769e0; --accent2:#eaf2ff; --danger:#b42318;
+  --shadow:0 6px 22px rgba(25,39,65,.08);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}
+header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);padding:14px 16px}
+.header-row{max-width:760px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+h1{font-size:19px;margin:0}.sub{font-size:12px;color:var(--muted);margin-top:2px}
+main{max-width:760px;margin:auto;padding:14px 12px 110px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;margin-bottom:12px;box-shadow:var(--shadow);overflow:hidden}
+.card h2{font-size:15px;margin:0;padding:15px 16px;border-bottom:1px solid var(--line)}
+.content{padding:14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.full{grid-column:1/-1}
+label{display:block;font-size:12px;font-weight:700;color:#465166;margin:0 0 5px}
+input,select,textarea{width:100%;border:1px solid #cfd6e2;border-radius:10px;padding:11px 10px;font:inherit;background:#fff;color:var(--text);outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(23,105,224,.1)}
+textarea{min-height:78px;resize:vertical}
+.question{background:#f8fafc;border-left:4px solid var(--accent);padding:10px 12px;border-radius:8px;font-size:13px;line-height:1.4;margin-bottom:12px}
+.pills{display:flex;flex-wrap:wrap;gap:7px}
+.pill{border:1px solid #cfd6e2;background:#fff;border-radius:999px;padding:8px 11px;font-size:12px;cursor:pointer;user-select:none}
+.pill.active{background:var(--accent2);border-color:var(--accent);color:#0d55ba;font-weight:700}
+.expenses{width:100%;border-collapse:collapse;font-size:12px}
+.expenses th,.expenses td{padding:8px 5px;border-bottom:1px solid #edf0f5;text-align:center}
+.expenses th:first-child,.expenses td:first-child{text-align:left}
+.expenses select{padding:7px 5px;font-size:12px}
+.calc{background:#eef5ff;border-radius:12px;padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.calc strong{display:block;font-size:17px}.calc span{font-size:11px;color:var(--muted)}
+.row3{display:grid;grid-template-columns:1.2fr .8fr .9fr;gap:8px}
+.checkline{display:flex;gap:8px;align-items:center;font-size:13px;padding:6px 0}
+.checkline input{width:auto}
+.actions{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);border-top:1px solid var(--line);padding:10px 12px calc(10px + env(safe-area-inset-bottom));z-index:20}
+.actions-inner{max-width:760px;margin:auto;display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:8px}
+button{border:0;border-radius:11px;padding:12px 10px;font-weight:750;cursor:pointer}
+.secondary{background:#edf1f6;color:#263248}.primary{background:var(--accent);color:#fff}.danger{color:var(--danger)}
+.status{font-size:12px;color:var(--muted);text-align:center;margin:8px 0 0}
+.unknowns{margin:0;padding-left:19px;font-size:13px;line-height:1.7}
+.photoNote{font-size:12px;color:var(--muted);margin-top:7px}
+@media(max-width:520px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.row3{grid-template-columns:1fr 1fr}.row3>*:first-child{grid-column:1/-1}}
+</style>
+</head>
+<body>
+<header>
+ <div class="header-row">
+   <div><h1>Commercial Property Notes</h1><div class="sub">Walkthrough & leasing checklist</div></div>
+   <button class="secondary" onclick="newProperty()">+ New</button>
+ </div>
+</header>
+
+<main>
+<form id="propertyForm">
+<section class="card">
+<h2>PROPERTY</h2><div class="content grid">
+ <div class="full"><label>Property Address</label><input name="address" placeholder="123 Main St, Suite 200"></div>
+ <div><label>Listing Agent</label><input name="agent" placeholder="Name"></div>
+ <div><label>Agent Phone</label><input name="phone" type="tel" placeholder="(626) 555-1234"></div>
+ <div><label>Date Visited</label><input name="date" type="date"></div>
+ <div><label>Suite / Unit</label><input name="unit"></div>
+ <div><label>Total Square Footage</label><input id="sf" name="sf" inputmode="decimal" placeholder="5,000"></div>
+ <div><label>Available Date</label><input name="available" type="date"></div>
+ <div class="full">
+  <label>Asking Rent</label>
+  <div class="row3"><input id="rent" name="rent" inputmode="decimal" placeholder="$1.00"><select id="rentBasis" name="rentBasis"><option value="sf">Per SF</option><option value="total">Total Rent</option></select><select id="rentPeriod" name="rentPeriod"><option value="month">Per Month</option><option value="year">Per Year</option></select></div>
+  <div class="calc"><div><span>Estimated Monthly Rent</span><strong id="monthly">$—</strong></div><div><span>Estimated Annual Rent</span><strong id="annual">$—</strong></div></div>
+ </div>
+</div></section>
+
+<section class="card">
+<h2>LEASE TERMS</h2><div class="content">
+ <div class="question">“You mentioned you use the <b>AIR CRE</b> lease with a modified gross structure?”</div>
+ <div class="grid">
+  <div><label>Lease Form</label><select name="leaseForm"><option>AIR CRE</option><option>Other</option><option>Unknown</option></select></div>
+  <div><label>Lease Structure</label><select name="leaseType"><option>Modified Gross</option><option>Gross</option><option>NNN</option><option>Other</option><option>Unknown</option></select></div>
+  <div><label>Lease Term</label><input name="term" placeholder="e.g. 3–5 years"></div>
+  <div><label>Annual Rent Increase</label><input name="increase" placeholder="e.g. 3%"></div>
+  <div><label>Security Deposit</label><input name="deposit" placeholder="$ / months"></div>
+  <div><label>Renewal Options</label><input name="renewal" placeholder="e.g. 1 x 5 years"></div>
+ </div>
+</div></section>
+
+<section class="card">
+<h2>RENT & EXPENSES</h2><div class="content">
+ <div class="question">“With the modified gross lease, what exactly is included in the rent, and what would the tenant be responsible for separately?”</div>
+ <table class="expenses"><thead><tr><th>Expense</th><th>Status</th></tr></thead><tbody id="expenseRows"></tbody></table>
+ <div class="grid" style="margin-top:12px">
+  <div><label>CAM Charge</label><input name="cam" placeholder="$ / SF or $ / month"></div>
+  <div><label>Other Charges</label><input name="otherCharges"></div>
+  <div class="full"><label>Expense Notes</label><textarea name="expenseNotes" placeholder="Base year, caps, reconciliations, etc."></textarea></div>
+ </div>
+</div></section>
+
+<section class="card">
+<h2>SPACE / WALKTHROUGH</h2><div class="content">
+ <div class="pills" data-group="features">
+  <span class="pill">Windows</span><span class="pill">HVAC</span><span class="pill">Restroom</span><span class="pill">Loading Area</span><span class="pill">Dock High</span><span class="pill">Ground Level</span><span class="pill">Street Visibility</span>
+ </div>
+ <div class="grid" style="margin-top:12px">
+  <div><label>Windows / Natural Light</label><input name="windows" placeholder="Location / amount"></div>
+  <div><label>Restrooms</label><input name="restrooms" placeholder="Number / type"></div>
+  <div><label>Ceiling Height</label><input name="ceiling" placeholder="e.g. 12 ft"></div>
+  <div><label>Power</label><input name="power" placeholder="Volts / amps / phase"></div>
+  <div><label>Roll-Up Doors</label><input name="rollups" placeholder="Number / dimensions"></div>
+  <div><label>HVAC Notes</label><input name="hvac"></div>
+  <div class="full"><label>Condition / Walkthrough Notes</label><textarea name="condition" placeholder="Entrances, visibility, repairs, overall condition..."></textarea></div>
+ </div>
+</div></section>
+
+<section class="card">
+<h2>USE & TENANTS</h2><div class="content grid">
+ <div class="full"><label>Permitted Uses</label><textarea name="uses"></textarea></div>
+ <div class="full"><label>Use Restrictions</label><textarea name="restrictions"></textarea></div>
+ <div><label>What Do Other Tenants Do?</label><textarea name="otherTenants"></textarea></div>
+ <div><label>Previous Use of Unit</label><textarea name="previousUse"></textarea></div>
+ <div class="full"><label>What Type of Tenant Is the Landlord Looking For?</label><textarea name="targetTenant"></textarea></div>
+</div></section>
+
+<section class="card">
+<h2>PARKING & SIGNAGE</h2><div class="content grid">
+ <div><label>Parking</label><input name="parking" placeholder="Spaces / street / garage"></div>
+ <div><label>Parking Cost</label><input name="parkingCost" placeholder="$"></div>
+ <div class="full"><label>Signage Allowed?</label><input name="signage" placeholder="Building / monument / window / restrictions"></div>
+ <div class="full"><label>Exterior / Visibility Notes</label><textarea name="exterior"></textarea></div>
+</div></section>
+
+<section class="card">
+<h2>TI & CONCESSIONS</h2><div class="content">
+ <div class="question">“Is the landlord offering any tenant improvement allowance or willing to do any improvements to the space?”</div>
+ <div class="grid">
+  <div><label>TI Allowance</label><input name="ti" placeholder="$ / SF / negotiable / none"></div>
+  <div><label>Landlord Improvements</label><input name="landlordWork" placeholder="What will landlord do?"></div>
+  <div><label>Free / Reduced Rent</label><input name="freeRent" placeholder="e.g. 1 month free"></div>
+  <div><label>Other Concessions</label><input name="concessions"></div>
+ </div>
+</div></section>
+
+<section class="card">
+<h2>FREIGHT ELEVATOR</h2><div class="content grid">
+ <div><label>Available?</label><select name="freight"><option>Unknown</option><option>Yes</option><option>No</option></select></div>
+ <div><label>Capacity</label><input name="freightCapacity" placeholder="e.g. 4,000 lbs"></div>
+ <div><label>Dimensions</label><input name="freightDimensions"></div>
+ <div><label>Floors Served</label><input name="freightFloors" placeholder="e.g. 2nd & 3rd"></div>
+ <div><label>Access / Hours</label><input name="freightAccess"></div>
+ <div><label>Who Uses It?</label><input name="freightUsers"></div>
+ <div class="full"><label>Restrictions / Loading Process</label><textarea name="freightNotes"></textarea></div>
+</div></section>
+
+<section class="card">
+<h2>PASSENGER ELEVATOR</h2><div class="content grid">
+ <div><label>Available?</label><select name="passenger"><option>Unknown</option><option>Yes</option><option>No</option></select></div>
+ <div><label>Floors Served</label><input name="passengerFloors"></div>
+ <div><label>Hours</label><input name="passengerHours"></div>
+ <div><label>Access Controls</label><input name="passengerAccess" placeholder="Key / card / none"></div>
+</div></section>
+
+<section class="card">
+<h2>PHOTOS & GENERAL NOTES</h2><div class="content">
+ <input id="photoInput" type="file" accept="image/*" capture="environment" multiple>
+ <div class="photoNote" id="photoCount">No photos selected. Photos are not stored in this demo after closing the page.</div>
+ <label style="margin-top:14px">General Notes</label><textarea name="notes" style="min-height:140px" placeholder="Anything else from the walkthrough or conversation..."></textarea>
+</div></section>
+
+<section class="card">
+<h2>QUESTIONS STILL TO ANSWER</h2><div class="content">
+ <p style="font-size:12px;color:var(--muted);margin-top:0">Anything marked “Unknown” in the expense section appears here automatically.</p>
+ <ul id="unknownList" class="unknowns"><li>None right now.</li></ul>
+</div></section>
+<div class="status" id="status">Your notes can be saved locally on this device.</div>
+</form>
+</main>
+
+<div class="actions"><div class="actions-inner">
+ <button class="secondary" onclick="window.print()">Print</button>
+ <button class="secondary danger" onclick="clearForm()">Clear</button>
+ <button class="primary" onclick="saveNotes()">Save Property</button>
+</div></div>
+
+<script>
+const expenseNames=["CAM","Property Taxes","Building Insurance","Water","Trash","Electricity","Gas","Landscaping"];
+const tbody=document.getElementById("expenseRows");
+expenseNames.forEach((x,i)=>{
+ const tr=document.createElement("tr");
+ tr.innerHTML=`<td>${x}</td><td><select class="expenseSelect" name="expense_${i}" data-label="${x}"><option>Unknown</option><option>Included in Rent</option><option>Tenant Pays</option><option>N/A</option></select></td>`;
+ tbody.appendChild(tr);
+});
+function num(v){return parseFloat(String(v).replace(/[$,\s]/g,""))||0}
+function calcRent(){
+ const sf=num(document.getElementById("sf").value), r=num(document.getElementById("rent").value);
+ const basis=document.getElementById("rentBasis").value, period=document.getElementById("rentPeriod").value;
+ let monthly=0;
+ if(basis==="sf") monthly=(period==="month")?sf*r:sf*r/12;
+ else monthly=(period==="month")?r:r/12;
+ document.getElementById("monthly").textContent=monthly?monthly.toLocaleString("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0}):"$—";
+ document.getElementById("annual").textContent=monthly?(monthly*12).toLocaleString("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0}):"$—";
+}
+["sf","rent","rentBasis","rentPeriod"].forEach(id=>document.getElementById(id).addEventListener("input",calcRent));
+document.querySelectorAll(".pill").forEach(p=>p.addEventListener("click",()=>p.classList.toggle("active")));
+function updateUnknowns(){
+ const u=[...document.querySelectorAll(".expenseSelect")].filter(s=>s.value==="Unknown").map(s=>s.dataset.label);
+ const ul=document.getElementById("unknownList"); ul.innerHTML="";
+ if(!u.length) ul.innerHTML="<li>None right now.</li>";
+ else u.forEach(x=>{const li=document.createElement("li");li.textContent=x+" expense responsibility";ul.appendChild(li)});
+}
+document.addEventListener("change",e=>{if(e.target.classList.contains("expenseSelect"))updateUnknowns()});
+document.getElementById("photoInput").addEventListener("change",e=>{
+ document.getElementById("photoCount").textContent=e.target.files.length?`${e.target.files.length} photo(s) selected for this walkthrough.`:"No photos selected.";
+});
+function formData(){
+ const data=Object.fromEntries(new FormData(document.getElementById("propertyForm")).entries());
+ data.features=[...document.querySelectorAll(".pill.active")].map(x=>x.textContent);
+ data.savedAt=new Date().toISOString();
+ return data;
+}
+function saveNotes(){
+ const data=formData();
+ const key="commercialPropertyNotes_current";
+ localStorage.setItem(key,JSON.stringify(data));
+ document.getElementById("status").textContent="Saved locally • "+new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"});
+}
+function restore(){
+ const raw=localStorage.getItem("commercialPropertyNotes_current"); if(!raw)return;
+ const d=JSON.parse(raw), f=document.getElementById("propertyForm");
+ Object.entries(d).forEach(([k,v])=>{
+   if(Array.isArray(v))return;
+   const el=f.elements[k]; if(el)el.value=v;
+ });
+ document.querySelectorAll(".pill").forEach(p=>p.classList.toggle("active",(d.features||[]).includes(p.textContent)));
+ calcRent(); updateUnknowns();
+}
+function clearForm(){
+ if(!confirm("Clear all notes for this property?"))return;
+ document.getElementById("propertyForm").reset();
+ document.querySelectorAll(".pill").forEach(p=>p.classList.remove("active"));
+ localStorage.removeItem("commercialPropertyNotes_current"); calcRent();updateUnknowns();
+ document.getElementById("status").textContent="Form cleared.";
+}
+function newProperty(){
+ if(confirm("Start a new property? Save your current notes first if you need them.")){clearForm();}
+}
+updateUnknowns();restore();
+</script>
+</body>
+</html>
