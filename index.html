@@ -40,7 +40,7 @@ textarea{min-height:78px;resize:vertical}
 .checkline{display:flex;gap:8px;align-items:center;font-size:13px;padding:6px 0}
 .checkline input{width:auto}
 .actions{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);border-top:1px solid var(--line);padding:10px 12px calc(10px + env(safe-area-inset-bottom));z-index:20}
-.actions-inner{max-width:760px;margin:auto;display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:8px}
+.actions-inner{max-width:760px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 button{border:0;border-radius:11px;padding:12px 10px;font-weight:750;cursor:pointer}
 .secondary{background:#edf1f6;color:#263248}.primary{background:var(--accent);color:#fff}.danger{color:var(--danger)}
 .status{font-size:12px;color:var(--muted);text-align:center;margin:8px 0 0}
@@ -179,9 +179,10 @@ button{border:0;border-radius:11px;padding:12px 10px;font-weight:750;cursor:poin
 </main>
 
 <div class="actions"><div class="actions-inner">
- <button class="secondary" onclick="window.print()">Print</button>
- <button class="secondary danger" onclick="clearForm()">Clear</button>
- <button class="primary" onclick="saveNotes()">Save Property</button>
+ <button class="secondary" type="button" onclick="emailNotes()">Email</button>
+ <button class="secondary" type="button" onclick="downloadNotes()">Files</button>
+ <button class="secondary danger" type="button" onclick="clearForm()">Clear</button>
+ <button class="primary" type="button" onclick="saveNotes()">Save</button>
 </div></div>
 
 <script>
@@ -246,6 +247,7 @@ function clearForm(){
 function newProperty(){
  if(confirm("Start a new property? Save your current notes first if you need them.")){clearForm();}
 }
+\nfunction readableSummary(){\n const d=formData(); let L=[];\n const add=(s)=>L.push(s);\n add("COMMERCIAL PROPERTY NOTES"); add("========================="); add("");\n add("PROPERTY"); add("Address: "+(d.address||"—")); add("Suite / Unit: "+(d.unit||"—")); add("Date Visited: "+(d.date||"—")); add("Listing Agent: "+(d.agent||"—")); add("Agent Phone: "+(d.phone||"—")); add("Total SF: "+(d.sf||"—")); add("Asking Rent: "+(d.rent||"—")+" / "+(d.rentBasis==="sf"?"SF":"Total")+" / "+(d.rentPeriod==="month"?"Month":"Year")); add("Estimated Monthly Rent: "+document.getElementById("monthly").textContent); add("Estimated Annual Rent: "+document.getElementById("annual").textContent); add("");\n add("LEASE TERMS"); add("Lease Form: "+(d.leaseForm||"—")); add("Lease Structure: "+(d.leaseType||"—")); add("Lease Term: "+(d.term||"—")); add("Annual Increase: "+(d.increase||"—")); add("Security Deposit: "+(d.deposit||"—")); add("Renewal Options: "+(d.renewal||"—")); add("");\n add("EXPENSES"); expenseNames.forEach((n,i)=>add(n+": "+(d["expense_"+i]||"Unknown"))); add("CAM Charge: "+(d.cam||"—")); add("Other Charges: "+(d.otherCharges||"—")); add("Expense Notes: "+(d.expenseNotes||"—")); add("");\n add("SPACE / WALKTHROUGH"); add("Features: "+((d.features||[]).join(", ")||"—")); add("Windows: "+(d.windows||"—")); add("Restrooms: "+(d.restrooms||"—")); add("Ceiling Height: "+(d.ceiling||"—")); add("Power: "+(d.power||"—")); add("Roll-Up Doors: "+(d.rollups||"—")); add("HVAC: "+(d.hvac||"—")); add("Condition: "+(d.condition||"—")); add("");\n add("USE & TENANTS"); add("Permitted Uses: "+(d.uses||"—")); add("Use Restrictions: "+(d.restrictions||"—")); add("Other Tenants: "+(d.otherTenants||"—")); add("Previous Use: "+(d.previousUse||"—")); add("Target Tenant: "+(d.targetTenant||"—")); add("");\n add("PARKING & SIGNAGE"); add("Parking: "+(d.parking||"—")); add("Parking Cost: "+(d.parkingCost||"—")); add("Signage: "+(d.signage||"—")); add("Exterior / Visibility: "+(d.exterior||"—")); add("");\n add("TI & CONCESSIONS"); add("TI Allowance: "+(d.ti||"—")); add("Landlord Improvements: "+(d.landlordWork||"—")); add("Free / Reduced Rent: "+(d.freeRent||"—")); add("Other Concessions: "+(d.concessions||"—")); add("");\n add("FREIGHT ELEVATOR"); add("Available: "+(d.freight||"—")); add("Capacity: "+(d.freightCapacity||"—")); add("Dimensions: "+(d.freightDimensions||"—")); add("Floors Served: "+(d.freightFloors||"—")); add("Access / Hours: "+(d.freightAccess||"—")); add("Who Uses It: "+(d.freightUsers||"—")); add("Restrictions / Loading: "+(d.freightNotes||"—")); add("");\n add("PASSENGER ELEVATOR"); add("Available: "+(d.passenger||"—")); add("Floors Served: "+(d.passengerFloors||"—")); add("Hours: "+(d.passengerHours||"—")); add("Access Controls: "+(d.passengerAccess||"—")); add(""); add("GENERAL NOTES"); add(d.notes||"—"); return L.join("\\n");\n}\nfunction safeFileName(){ const a=document.querySelector('[name="address"]').value.trim()||"Commercial-Property"; const d=document.querySelector('[name="date"]').value||new Date().toISOString().slice(0,10); return (a+"-"+d).replace(/[^a-z0-9]+/gi,"-").replace(/^-|-$/g,"")+".txt"; }\nfunction downloadNotes(){ saveNotes(); const b=new Blob([readableSummary()],{type:"text/plain;charset=utf-8"}); const u=URL.createObjectURL(b); const a=document.createElement("a"); a.href=u; a.download=safeFileName(); document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u),1000); document.getElementById("status").textContent="Download started — on iPhone save it to Files."; }\nfunction emailNotes(){ saveNotes(); const a=document.querySelector('[name="address"]').value.trim()||"Commercial Property"; window.location.href="mailto:?subject="+encodeURIComponent("Commercial Property Notes - "+a)+"&body="+encodeURIComponent(readableSummary()); }\n
 updateUnknowns();restore();
 </script>
 </body>
