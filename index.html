@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#f5f7fb">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <title>Commercial Property Notes</title>
 <style>
 :root{
@@ -28,13 +29,11 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 
 textarea{min-height:78px;resize:vertical}
 .question{background:#f8fafc;border-left:4px solid var(--accent);padding:10px 12px;border-radius:8px;font-size:13px;line-height:1.4;margin-bottom:12px}
 .pills{display:flex;flex-wrap:wrap;gap:7px}
-.pill{border:1px solid #cfd6e2;background:#fff;border-radius:999px;padding:8px 11px;font-size:12px;cursor:pointer;user-select:none}
-.pill.active{background:#1769e0 !important;border-color:#1769e0 !important;color:#fff !important;font-weight:800;box-shadow:0 2px 7px rgba(23,105,224,.25)}
-.pill{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .feature-pill{margin:0;display:inline-block;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .feature-pill input{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}
 .feature-pill span{display:block;border:1px solid #cfd6e2;background:#fff;border-radius:999px;padding:8px 11px;font-size:12px;color:#172033;user-select:none;-webkit-user-select:none}
-.feature-pill input:checked + span{background:#1769e0 !important;border-color:#1769e0 !important;color:#fff !important;font-weight:800;box-shadow:0 2px 7px rgba(23,105,224,.25)}
+.feature-pill input:checked + span{background:#1769e0;border-color:#1769e0;color:#fff;font-weight:800;box-shadow:0 2px 7px rgba(23,105,224,.25)}
+.feature-pill input:focus-visible + span{box-shadow:0 0 0 3px rgba(23,105,224,.35)}
 .expenses{width:100%;border-collapse:collapse;font-size:12px}
 .expenses th,.expenses td{padding:8px 5px;border-bottom:1px solid #edf0f5;text-align:center}
 .expenses th:first-child,.expenses td:first-child{text-align:left}
@@ -42,12 +41,10 @@ textarea{min-height:78px;resize:vertical}
 .calc{background:#eef5ff;border-radius:12px;padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
 .calc strong{display:block;font-size:17px}.calc span{font-size:11px;color:var(--muted)}
 .row3{display:grid;grid-template-columns:1.2fr .8fr .9fr;gap:8px}
-.checkline{display:flex;gap:8px;align-items:center;font-size:13px;padding:6px 0}
-.checkline input{width:auto}
 .actions{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);border-top:1px solid var(--line);padding:10px 12px calc(10px + env(safe-area-inset-bottom));z-index:20}
-.actions-inner{max-width:760px;margin:auto;display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
-button{border:0;border-radius:11px;padding:12px 10px;font-weight:750;cursor:pointer}
-.secondary{background:#edf1f6;color:#263248}.primary{background:var(--accent);color:#fff}.danger{color:var(--danger)}
+.actions-inner{max-width:760px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+button{border:0;border-radius:11px;padding:12px 10px;font-weight:750;cursor:pointer;font-family:inherit;font-size:14px}
+.secondary{background:#edf1f6;color:#263248}.primary{background:var(--accent);color:#fff}
 .status{font-size:12px;color:var(--muted);text-align:center;margin:8px 0 0}
 .unknowns{margin:0;padding-left:19px;font-size:13px;line-height:1.7}
 .photoNote{font-size:12px;color:var(--muted);margin-top:7px}
@@ -57,13 +54,13 @@ button{border:0;border-radius:11px;padding:12px 10px;font-weight:750;cursor:poin
 <body>
 <header>
  <div class="header-row">
-   <div><h1>Commercial Property Notes</h1><div class="sub">Walkthrough & leasing checklist</div></div>
-   <button class="secondary" onclick="newProperty()">+ New</button>
+   <div><h1>Commercial Property Notes</h1><div class="sub">Walkthrough &amp; leasing checklist</div></div>
+   <button class="secondary" type="button" onclick="newProperty()">+ New</button>
  </div>
 </header>
 
 <main>
-<input id="documentPicker" type="file" accept=".txt,.csv,.json,.pdf,text/plain,text/csv,application/json,application/pdf" style="display:none">
+<input id="documentPicker" type="file" accept=".txt,.csv,.json,text/plain,text/csv,application/json" style="display:none">
 <form id="propertyForm">
 <section class="card">
 <h2>PROPERTY</h2><div class="content grid">
@@ -95,7 +92,7 @@ button{border:0;border-radius:11px;padding:12px 10px;font-weight:750;cursor:poin
 </div></section>
 
 <section class="card">
-<h2>RENT & EXPENSES</h2><div class="content">
+<h2>RENT &amp; EXPENSES</h2><div class="content">
  <div class="question">“With the modified gross lease, what exactly is included in the rent, and what would the tenant be responsible for separately?”</div>
  <table class="expenses"><thead><tr><th>Expense</th><th>Status</th></tr></thead><tbody id="expenseRows"></tbody></table>
  <div class="grid" style="margin-top:12px">
@@ -128,7 +125,7 @@ button{border:0;border-radius:11px;padding:12px 10px;font-weight:750;cursor:poin
 </div></section>
 
 <section class="card">
-<h2>USE & TENANTS</h2><div class="content grid">
+<h2>USE &amp; TENANTS</h2><div class="content grid">
  <div class="full"><label>Permitted Uses</label><textarea name="uses"></textarea></div>
  <div class="full"><label>Use Restrictions</label><textarea name="restrictions"></textarea></div>
  <div><label>What Do Other Tenants Do?</label><textarea name="otherTenants"></textarea></div>
@@ -137,13 +134,12 @@ button{border:0;border-radius:11px;padding:12px 10px;font-weight:750;cursor:poin
 </div></section>
 
 <section class="card">
-<h2>PARKING & SIGNAGE</h2><div class="content grid">
+<h2>PARKING &amp; SIGNAGE</h2><div class="content grid">
  <div><label>Parking</label><input name="parking" placeholder="Spaces / street / garage"></div>
  <div><label>Parking Cost</label><input name="parkingCost" placeholder="$"></div>
  <div class="full"><label>Signage Allowed?</label><input name="signage" placeholder="Building / monument / window / restrictions"></div>
  <div class="full"><label>Exterior / Visibility Notes</label><textarea name="exterior"></textarea></div>
 </div></section>
-
 
 <section class="card">
 <h2>COMMERCIAL INSURANCE</h2><div class="content">
@@ -160,7 +156,7 @@ button{border:0;border-radius:11px;padding:12px 10px;font-weight:750;cursor:poin
 </div></section>
 
 <section class="card">
-<h2>TI & CONCESSIONS</h2><div class="content">
+<h2>TI &amp; CONCESSIONS</h2><div class="content">
  <div class="question">“Is the landlord offering any tenant improvement allowance or willing to do any improvements to the space?”</div>
  <div class="grid">
   <div><label>TI Allowance</label><input name="ti" placeholder="$ / SF / negotiable / none"></div>
@@ -175,7 +171,7 @@ button{border:0;border-radius:11px;padding:12px 10px;font-weight:750;cursor:poin
  <div><label>Available?</label><select name="freight"><option>Unknown</option><option>Yes</option><option>No</option></select></div>
  <div><label>Capacity</label><input name="freightCapacity" placeholder="e.g. 4,000 lbs"></div>
  <div><label>Dimensions</label><input name="freightDimensions"></div>
- <div><label>Floors Served</label><input name="freightFloors" placeholder="e.g. 2nd & 3rd"></div>
+ <div><label>Floors Served</label><input name="freightFloors" placeholder="e.g. 2nd &amp; 3rd"></div>
  <div><label>Access / Hours</label><input name="freightAccess"></div>
  <div><label>Who Uses It?</label><input name="freightUsers"></div>
  <div class="full"><label>Restrictions / Loading Process</label><textarea name="freightNotes"></textarea></div>
@@ -190,7 +186,7 @@ button{border:0;border-radius:11px;padding:12px 10px;font-weight:750;cursor:poin
 </div></section>
 
 <section class="card">
-<h2>PHOTOS & GENERAL NOTES</h2><div class="content">
+<h2>PHOTOS &amp; GENERAL NOTES</h2><div class="content">
  <div class="grid">
   <div><label>Upload Existing Photos</label><input id="photoLibrary" type="file" accept="image/*" multiple></div>
   <div><label>Take New Photo</label><input id="photoCamera" type="file" accept="image/*" capture="environment"></div>
@@ -206,7 +202,7 @@ button{border:0;border-radius:11px;padding:12px 10px;font-weight:750;cursor:poin
  <p style="font-size:12px;color:var(--muted);margin-top:0">Anything marked “Unknown” in the expense section appears here automatically.</p>
  <ul id="unknownList" class="unknowns"><li>None right now.</li></ul>
 </div></section>
-<div class="status" id="status">Your notes can be saved locally on this device.</div>
+<div class="status" id="status">Your notes are saved on this device as you go.</div>
 </form>
 </main>
 
@@ -214,185 +210,352 @@ button{border:0;border-radius:11px;padding:12px 10px;font-weight:750;cursor:poin
  <button class="secondary" type="button" onclick="emailNotes()">Email</button>
  <button class="secondary" type="button" onclick="openFilePicker()">Files</button>
  <button class="secondary" type="button" onclick="downloadCSV()">CSV</button>
- <button class="secondary" type="button" onclick="saveToFiles()">Save</button>
- <button class="primary" type="button" onclick="saveNotes()">App Save</button>
+ <button class="primary" type="button" onclick="appSave()">App Save</button>
 </div></div>
 
 <script>
+/* ---------- setup ---------- */
 const expenseNames=["CAM","Property Taxes","Building Insurance","Water","Trash","Electricity","Gas","Landscaping"];
 const tbody=document.getElementById("expenseRows");
-expenseNames.forEach((x,i)=>{
- const tr=document.createElement("tr");
- tr.innerHTML=`<td>${x}</td><td><select class="expenseSelect" name="expense_${i}" data-label="${x}"><option>Unknown</option><option>Included in Rent</option><option>Tenant Pays</option><option>N/A</option></select></td>`;
- tbody.appendChild(tr);
+expenseNames.forEach(function(x,i){
+  const tr=document.createElement("tr");
+  tr.innerHTML='<td>'+x+'</td><td><select class="expenseSelect" name="expense_'+i+'" data-label="'+x+'"><option>Unknown</option><option>Included in Rent</option><option>Tenant Pays</option><option>N/A</option></select></td>';
+  tbody.appendChild(tr);
 });
+
+const STORE_KEY="commercialPropertyNotes_current";
+const MARK_START="NOTES_DATA_V1:";
+const MARK_END=":END";
+
+function setStatus(msg){document.getElementById("status").textContent=msg}
+
+/* ---------- rent math ---------- */
 function num(v){return parseFloat(String(v).replace(/[$,\s]/g,""))||0}
 function calcRent(){
- const sf=num(document.getElementById("sf").value), r=num(document.getElementById("rent").value);
- const basis=document.getElementById("rentBasis").value, period=document.getElementById("rentPeriod").value;
- let monthly=0;
- if(basis==="sf") monthly=(period==="month")?sf*r:sf*r/12;
- else monthly=(period==="month")?r:r/12;
- document.getElementById("monthly").textContent=monthly?monthly.toLocaleString("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0}):"$—";
- document.getElementById("annual").textContent=monthly?(monthly*12).toLocaleString("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0}):"$—";
+  const sf=num(document.getElementById("sf").value), r=num(document.getElementById("rent").value);
+  const basis=document.getElementById("rentBasis").value, period=document.getElementById("rentPeriod").value;
+  let monthly=0;
+  if(basis==="sf") monthly=(period==="month")?sf*r:sf*r/12;
+  else monthly=(period==="month")?r:r/12;
+  const fmt=function(n){return n.toLocaleString("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0})};
+  document.getElementById("monthly").textContent=monthly?fmt(monthly):"$—";
+  document.getElementById("annual").textContent=monthly?fmt(monthly*12):"$—";
 }
-["sf","rent","rentBasis","rentPeriod"].forEach(id=>document.getElementById(id).addEventListener("input",calcRent));
-
+["sf","rent","rentBasis","rentPeriod"].forEach(function(id){
+  const el=document.getElementById(id);
+  el.addEventListener("input",calcRent);
+  el.addEventListener("change",calcRent);
 });
+
+/* ---------- open questions ---------- */
 function updateUnknowns(){
- const u=[...document.querySelectorAll(".expenseSelect")].filter(s=>s.value==="Unknown").map(s=>s.dataset.label);
- const ul=document.getElementById("unknownList"); ul.innerHTML="";
- if(!u.length) ul.innerHTML="<li>None right now.</li>";
- else u.forEach(x=>{const li=document.createElement("li");li.textContent=x+" expense responsibility";ul.appendChild(li)});
+  const u=[].slice.call(document.querySelectorAll(".expenseSelect")).filter(function(s){return s.value==="Unknown"}).map(function(s){return s.dataset.label});
+  const ul=document.getElementById("unknownList"); ul.innerHTML="";
+  if(!u.length){ul.innerHTML="<li>None right now.</li>";return}
+  u.forEach(function(x){const li=document.createElement("li");li.textContent=x+" expense responsibility";ul.appendChild(li)});
 }
-document.addEventListener("change",e=>{if(e.target.classList.contains("expenseSelect"))updateUnknowns()});
+document.addEventListener("change",function(e){if(e.target.classList&&e.target.classList.contains("expenseSelect"))updateUnknowns()});
+
+/* ---------- photos ---------- */
 let selectedPhotos=[];
 function addPhotos(files){
- [...files].forEach(file=>{
-   if(file.type.startsWith("image/")) selectedPhotos.push(file);
- });
- document.getElementById("photoCount").textContent=selectedPhotos.length?`${selectedPhotos.length} photo(s) selected.`:"No photos selected.";
- const preview=document.getElementById("photoPreview");
- preview.innerHTML="";
- selectedPhotos.forEach((file,i)=>{
-   const wrap=document.createElement("div");
-   wrap.style.position="relative";
-   const img=document.createElement("img");
-   img.src=URL.createObjectURL(file);
-   img.style.cssText="width:100%;height:95px;object-fit:cover;border-radius:10px;border:1px solid #dfe4ec";
-   img.onload=()=>URL.revokeObjectURL(img.src);
-   wrap.appendChild(img);
-   preview.appendChild(wrap);
- });
+  [].slice.call(files).forEach(function(file){if(file.type.indexOf("image/")===0)selectedPhotos.push(file)});
+  document.getElementById("photoCount").textContent=selectedPhotos.length?selectedPhotos.length+" photo(s) selected.":"No photos selected.";
+  const preview=document.getElementById("photoPreview");
+  preview.innerHTML="";
+  selectedPhotos.forEach(function(file){
+    const img=document.createElement("img");
+    img.src=URL.createObjectURL(file);
+    img.style.cssText="width:100%;height:95px;object-fit:cover;border-radius:10px;border:1px solid #dfe4ec";
+    preview.appendChild(img);
+  });
 }
-document.getElementById("photoLibrary").addEventListener("change",e=>addPhotos(e.target.files));
-document.getElementById("photoCamera").addEventListener("change",e=>addPhotos(e.target.files));
+document.getElementById("photoLibrary").addEventListener("change",function(e){addPhotos(e.target.files)});
+document.getElementById("photoCamera").addEventListener("change",function(e){addPhotos(e.target.files)});
+
+/* ---------- form data in / out ---------- */
 function formData(){
- const data=Object.fromEntries(new FormData(document.getElementById("propertyForm")).entries());
- data.features=[...document.querySelectorAll('input[name="feature"]:checked')].map(x=>x.value);
- data.savedAt=new Date().toISOString();
- return data;
+  const data=Object.fromEntries(new FormData(document.getElementById("propertyForm")).entries());
+  delete data.feature;
+  data.features=[].slice.call(document.querySelectorAll('input[name="feature"]:checked')).map(function(x){return x.value});
+  data.savedAt=new Date().toISOString();
+  return data;
 }
-function saveNotes(){
- const data=formData();
- const key="commercialPropertyNotes_current";
- localStorage.setItem(key,JSON.stringify(data));
- document.getElementById("status").textContent="Saved locally • "+new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"});
+function applyData(d){
+  if(!d||typeof d!=="object")return false;
+  const f=document.getElementById("propertyForm");
+  Object.keys(d).forEach(function(k){
+    if(k==="features"||k==="savedAt")return;
+    const el=f.elements[k];
+    if(el&&typeof el.value!=="undefined"&&!el.length)el.value=d[k]==null?"":d[k];
+  });
+  const feats=d.features||[];
+  document.querySelectorAll('input[name="feature"]').forEach(function(cb){cb.checked=feats.indexOf(cb.value)>-1});
+  calcRent();updateUnknowns();
+  return true;
+}
+
+/* ---------- local (on-device) save ---------- */
+function saveLocal(){
+  try{localStorage.setItem(STORE_KEY,JSON.stringify(formData()));return true}catch(e){return false}
 }
 function restore(){
- const raw=localStorage.getItem("commercialPropertyNotes_current"); if(!raw)return;
- const d=JSON.parse(raw), f=document.getElementById("propertyForm");
- Object.entries(d).forEach(([k,v])=>{
-   if(Array.isArray(v))return;
-   const el=f.elements[k]; if(el)el.value=v;
- });
- document.querySelectorAll('input[name="feature"]').forEach(cb=>cb.checked=(d.features||[]).includes(cb.value));
- calcRent(); updateUnknowns();
+  let raw=null;
+  try{raw=localStorage.getItem(STORE_KEY)}catch(e){raw=null}
+  if(!raw){calcRent();updateUnknowns();return}
+  try{applyData(JSON.parse(raw))}catch(e){calcRent();updateUnknowns()}
 }
-function clearForm(){
- if(!confirm("Clear all notes for this property?"))return;
- document.getElementById("propertyForm").reset();
- document.querySelectorAll('input[name="feature"]').forEach(cb=>cb.checked=false);
- localStorage.removeItem("commercialPropertyNotes_current"); calcRent();updateUnknowns();
- document.getElementById("status").textContent="Form cleared.";
-}
-function newProperty(){
- if(confirm("Start a new property? Save your current notes first if you need them.")){clearForm();}
-}
-\nfunction readableSummary(){\n const d=formData(); let L=[];\n const add=(s)=>L.push(s);\n add("COMMERCIAL PROPERTY NOTES"); add("========================="); add("");\n add("PROPERTY"); add("Address: "+(d.address||"—")); add("Suite / Unit: "+(d.unit||"—")); add("Date Visited: "+(d.date||"—")); add("Listing Agent: "+(d.agent||"—")); add("Agent Phone: "+(d.phone||"—")); add("Total SF: "+(d.sf||"—")); add("Asking Rent: "+(d.rent||"—")+" / "+(d.rentBasis==="sf"?"SF":"Total")+" / "+(d.rentPeriod==="month"?"Month":"Year")); add("Estimated Monthly Rent: "+document.getElementById("monthly").textContent); add("Estimated Annual Rent: "+document.getElementById("annual").textContent); add("");\n add("LEASE TERMS"); add("Lease Form: "+(d.leaseForm||"—")); add("Lease Structure: "+(d.leaseType||"—")); add("Lease Term: "+(d.term||"—")); add("Annual Increase: "+(d.increase||"—")); add("Security Deposit: "+(d.deposit||"—")); add("Renewal Options: "+(d.renewal||"—")); add("");\n add("EXPENSES"); expenseNames.forEach((n,i)=>add(n+": "+(d["expense_"+i]||"Unknown"))); add("CAM Charge: "+(d.cam||"—")); add("Other Charges: "+(d.otherCharges||"—")); add("Expense Notes: "+(d.expenseNotes||"—")); add("");\n add("SPACE / WALKTHROUGH"); add("Features: "+((d.features||[]).join(", ")||"—")); add("Windows: "+(d.windows||"—")); add("Restrooms: "+(d.restrooms||"—")); add("Ceiling Height: "+(d.ceiling||"—")); add("Power: "+(d.power||"—")); add("Roll-Up Doors: "+(d.rollups||"—")); add("HVAC: "+(d.hvac||"—")); add("Condition: "+(d.condition||"—")); add("");\n add("USE & TENANTS"); add("Permitted Uses: "+(d.uses||"—")); add("Use Restrictions: "+(d.restrictions||"—")); add("Other Tenants: "+(d.otherTenants||"—")); add("Previous Use: "+(d.previousUse||"—")); add("Target Tenant: "+(d.targetTenant||"—")); add("");\n add("PARKING & SIGNAGE"); add("Parking: "+(d.parking||"—")); add("Parking Cost: "+(d.parkingCost||"—")); add("Signage: "+(d.signage||"—")); add("Exterior / Visibility: "+(d.exterior||"—")); add("");\n add("TI & CONCESSIONS"); add("TI Allowance: "+(d.ti||"—")); add("Landlord Improvements: "+(d.landlordWork||"—")); add("Free / Reduced Rent: "+(d.freeRent||"—")); add("Other Concessions: "+(d.concessions||"—")); add("");\n add("FREIGHT ELEVATOR"); add("Available: "+(d.freight||"—")); add("Capacity: "+(d.freightCapacity||"—")); add("Dimensions: "+(d.freightDimensions||"—")); add("Floors Served: "+(d.freightFloors||"—")); add("Access / Hours: "+(d.freightAccess||"—")); add("Who Uses It: "+(d.freightUsers||"—")); add("Restrictions / Loading: "+(d.freightNotes||"—")); add("");\n add("PASSENGER ELEVATOR"); add("Available: "+(d.passenger||"—")); add("Floors Served: "+(d.passengerFloors||"—")); add("Hours: "+(d.passengerHours||"—")); add("Access Controls: "+(d.passengerAccess||"—")); add(""); add("GENERAL NOTES"); add(d.notes||"—"); return L.join("\\n");\n}\nfunction safeFileName(){ const a=document.querySelector('[name="address"]').value.trim()||"Commercial-Property"; const d=document.querySelector('[name="date"]').value||new Date().toISOString().slice(0,10); return (a+"-"+d).replace(/[^a-z0-9]+/gi,"-").replace(/^-|-$/g,"")+".txt"; }\nfunction legacyDownloadNotes(){ saveNotes(); const b=new Blob([readableSummary()],{type:"text/plain;charset=utf-8"}); const u=URL.createObjectURL(b); const a=document.createElement("a"); a.href=u; a.download=safeFileName(); document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u),1000); document.getElementById("status").textContent="Download started — on iPhone save it to Files."; }\nfunction emailNotes(){ saveNotes(); const a=document.querySelector('[name="address"]').value.trim()||"Commercial Property"; window.location.href="mailto:?subject="+encodeURIComponent("Commercial Property Notes - "+a)+"&body="+encodeURIComponent(readableSummary()); }\n
+document.getElementById("propertyForm").addEventListener("input",function(){saveLocal()});
+document.getElementById("propertyForm").addEventListener("change",function(){saveLocal()});
 
-function openFilePicker(){
- const picker=document.getElementById("documentPicker");
- picker.value="";
- picker.click();
+/* ---------- hidden restore code embedded in saved files ---------- */
+function encodeData(){
+  const json=JSON.stringify(formData());
+  return MARK_START+btoa(unescape(encodeURIComponent(json)))+MARK_END;
 }
-document.getElementById("documentPicker").addEventListener("change",e=>{
- const f=e.target.files && e.target.files[0];
- document.getElementById("status").textContent=f ? "Selected from Files: "+f.name : "No file selected.";
-});
+function decodeData(text){
+  const m=text.match(/NOTES_DATA_V1:([A-Za-z0-9+/=]+):END/);
+  if(!m)return null;
+  try{return JSON.parse(decodeURIComponent(escape(atob(m[1]))))}catch(e){return null}
+}
 
+/* ---------- readable text summary ---------- */
+function readableSummary(includeRestoreCode){
+  const d=formData();
+  const L=[];
+  const add=function(s){L.push(s)};
+  const v=function(x){return (x===undefined||x===null||x==="")?"—":x};
+
+  add("COMMERCIAL PROPERTY NOTES");
+  add("=========================");
+  add("");
+  add("PROPERTY");
+  add("Address: "+v(d.address));
+  add("Suite / Unit: "+v(d.unit));
+  add("Date Visited: "+v(d.date));
+  add("Available Date: "+v(d.available));
+  add("Listing Agent: "+v(d.agent));
+  add("Agent Phone: "+v(d.phone));
+  add("Total SF: "+v(d.sf));
+  add("Asking Rent: "+v(d.rent)+" / "+(d.rentBasis==="sf"?"SF":"Total")+" / "+(d.rentPeriod==="month"?"Month":"Year"));
+  add("Estimated Monthly Rent: "+document.getElementById("monthly").textContent);
+  add("Estimated Annual Rent: "+document.getElementById("annual").textContent);
+  add("");
+  add("LEASE TERMS");
+  add("Lease Form: "+v(d.leaseForm));
+  add("Lease Structure: "+v(d.leaseType));
+  add("Lease Term: "+v(d.term));
+  add("Annual Increase: "+v(d.increase));
+  add("Security Deposit: "+v(d.deposit));
+  add("Renewal Options: "+v(d.renewal));
+  add("");
+  add("EXPENSES");
+  expenseNames.forEach(function(n,i){add(n+": "+v(d["expense_"+i]))});
+  add("CAM Charge: "+v(d.cam));
+  add("Other Charges: "+v(d.otherCharges));
+  add("Expense Notes: "+v(d.expenseNotes));
+  add("");
+  add("SPACE / WALKTHROUGH");
+  add("Features: "+((d.features||[]).join(", ")||"—"));
+  add("Windows: "+v(d.windows));
+  add("Restrooms: "+v(d.restrooms));
+  add("Ceiling Height: "+v(d.ceiling));
+  add("Power: "+v(d.power));
+  add("Roll-Up Doors: "+v(d.rollups));
+  add("HVAC: "+v(d.hvac));
+  add("Condition: "+v(d.condition));
+  add("");
+  add("USE & TENANTS");
+  add("Permitted Uses: "+v(d.uses));
+  add("Use Restrictions: "+v(d.restrictions));
+  add("Other Tenants: "+v(d.otherTenants));
+  add("Previous Use: "+v(d.previousUse));
+  add("Target Tenant: "+v(d.targetTenant));
+  add("");
+  add("PARKING & SIGNAGE");
+  add("Parking: "+v(d.parking));
+  add("Parking Cost: "+v(d.parkingCost));
+  add("Signage: "+v(d.signage));
+  add("Exterior / Visibility: "+v(d.exterior));
+  add("");
+  add("COMMERCIAL INSURANCE");
+  add("General Liability Required: "+v(d.cgl));
+  add("Required Limit: "+v(d.cglLimit));
+  add("Landlord Additional Insured: "+v(d.additionalInsured));
+  add("Certificate of Insurance: "+v(d.coi));
+  add("Business Property Coverage: "+v(d.propertyCoverage));
+  add("Workers' Compensation: "+v(d.workersComp));
+  add("Insurance Notes: "+v(d.insuranceNotes));
+  add("");
+  add("TI & CONCESSIONS");
+  add("TI Allowance: "+v(d.ti));
+  add("Landlord Improvements: "+v(d.landlordWork));
+  add("Free / Reduced Rent: "+v(d.freeRent));
+  add("Other Concessions: "+v(d.concessions));
+  add("");
+  add("FREIGHT ELEVATOR");
+  add("Available: "+v(d.freight));
+  add("Capacity: "+v(d.freightCapacity));
+  add("Dimensions: "+v(d.freightDimensions));
+  add("Floors Served: "+v(d.freightFloors));
+  add("Access / Hours: "+v(d.freightAccess));
+  add("Who Uses It: "+v(d.freightUsers));
+  add("Restrictions / Loading: "+v(d.freightNotes));
+  add("");
+  add("PASSENGER ELEVATOR");
+  add("Available: "+v(d.passenger));
+  add("Floors Served: "+v(d.passengerFloors));
+  add("Hours: "+v(d.passengerHours));
+  add("Access Controls: "+v(d.passengerAccess));
+  add("");
+  add("GENERAL NOTES");
+  add(v(d.notes));
+  if(includeRestoreCode){
+    add("");
+    add("--- restore code (leave this line in the file to reopen these notes in the app) ---");
+    add(encodeData());
+  }
+  return L.join("\n");
+}
+
+function safeFileName(ext){
+  const a=(document.querySelector('[name="address"]').value||"").trim()||"Commercial-Property";
+  const d=document.querySelector('[name="date"]').value||new Date().toISOString().slice(0,10);
+  return (a+"-"+d).replace(/[^a-z0-9]+/gi,"-").replace(/^-|-$/g,"")+(ext||".txt");
+}
+
+/* ---------- CSV ---------- */
 function csvEscape(v){
- v=(v===undefined||v===null)?"":String(v);
- return '"'+v.replace(/"/g,'""')+'"';
+  v=(v===undefined||v===null)?"":String(v);
+  return '"'+v.replace(/"/g,'""')+'"';
 }
 function buildCSV(){
- const d=formData();
- const rows=[
-  ["Section","Field","Value"],
-  ["Property","Address",d.address],["Property","Suite / Unit",d.unit],["Property","Date Visited",d.date],
-  ["Property","Listing Agent",d.agent],["Property","Agent Phone",d.phone],["Property","Total SF",d.sf],
-  ["Property","Asking Rent",d.rent],["Property","Rent Basis",d.rentBasis],["Property","Rent Period",d.rentPeriod],
-  ["Lease","Lease Form",d.leaseForm],["Lease","Lease Structure",d.leaseType],["Lease","Lease Term",d.term],
-  ["Lease","Annual Increase",d.increase],["Lease","Security Deposit",d.deposit],["Lease","Renewal Options",d.renewal],
-  ["Expenses","CAM",d.expense_0],["Expenses","Property Taxes",d.expense_1],["Expenses","Building Insurance",d.expense_2],
-  ["Expenses","Water",d.expense_3],["Expenses","Trash",d.expense_4],["Expenses","Electricity",d.expense_5],
-  ["Expenses","Gas",d.expense_6],["Expenses","Landscaping",d.expense_7],["Expenses","CAM Charge",d.cam],
-  ["Expenses","Other Charges",d.otherCharges],["Expenses","Notes",d.expenseNotes],
-  ["Space","Selected Features",(d.features||[]).join("; ")],["Space","Windows",d.windows],["Space","Restrooms",d.restrooms],
-  ["Space","Ceiling Height",d.ceiling],["Space","Power",d.power],["Space","Roll-Up Doors",d.rollups],
-  ["Space","HVAC",d.hvac],["Space","Condition",d.condition],
-  ["Use","Permitted Uses",d.uses],["Use","Restrictions",d.restrictions],["Use","Other Tenants",d.otherTenants],
-  ["Use","Previous Use",d.previousUse],["Use","Target Tenant",d.targetTenant],
-  ["Parking","Parking",d.parking],["Parking","Parking Cost",d.parkingCost],["Parking","Signage",d.signage],
-  ["Parking","Exterior / Visibility",d.exterior],
-  ["Insurance","General Liability Required",d.cgl],["Insurance","Liability Limit",d.cglLimit],
-  ["Insurance","Additional Insured",d.additionalInsured],["Insurance","Certificate of Insurance",d.coi],
-  ["Insurance","Business Property Coverage",d.propertyCoverage],["Insurance","Workers Compensation",d.workersComp],
-  ["Insurance","Notes",d.insuranceNotes],
-  ["TI / Concessions","TI Allowance",d.ti],["TI / Concessions","Landlord Improvements",d.landlordWork],
-  ["TI / Concessions","Free / Reduced Rent",d.freeRent],["TI / Concessions","Other Concessions",d.concessions],
-  ["Freight Elevator","Available",d.freight],["Freight Elevator","Capacity",d.freightCapacity],
-  ["Freight Elevator","Dimensions",d.freightDimensions],["Freight Elevator","Floors Served",d.freightFloors],
-  ["Freight Elevator","Access / Hours",d.freightAccess],["Freight Elevator","Who Uses It",d.freightUsers],
-  ["Freight Elevator","Notes",d.freightNotes],
-  ["Passenger Elevator","Available",d.passenger],["Passenger Elevator","Floors Served",d.passengerFloors],
-  ["Passenger Elevator","Hours",d.passengerHours],["Passenger Elevator","Access Controls",d.passengerAccess],
-  ["Notes","General Notes",d.notes]
- ];
- return rows.map(r=>r.map(csvEscape).join(",")).join("\r\n");
+  const d=formData();
+  const rows=[
+   ["Section","Field","Value"],
+   ["Property","Address",d.address],["Property","Suite / Unit",d.unit],["Property","Date Visited",d.date],
+   ["Property","Available Date",d.available],
+   ["Property","Listing Agent",d.agent],["Property","Agent Phone",d.phone],["Property","Total SF",d.sf],
+   ["Property","Asking Rent",d.rent],["Property","Rent Basis",d.rentBasis],["Property","Rent Period",d.rentPeriod],
+   ["Property","Estimated Monthly Rent",document.getElementById("monthly").textContent],
+   ["Property","Estimated Annual Rent",document.getElementById("annual").textContent],
+   ["Lease","Lease Form",d.leaseForm],["Lease","Lease Structure",d.leaseType],["Lease","Lease Term",d.term],
+   ["Lease","Annual Increase",d.increase],["Lease","Security Deposit",d.deposit],["Lease","Renewal Options",d.renewal],
+   ["Expenses","CAM",d.expense_0],["Expenses","Property Taxes",d.expense_1],["Expenses","Building Insurance",d.expense_2],
+   ["Expenses","Water",d.expense_3],["Expenses","Trash",d.expense_4],["Expenses","Electricity",d.expense_5],
+   ["Expenses","Gas",d.expense_6],["Expenses","Landscaping",d.expense_7],["Expenses","CAM Charge",d.cam],
+   ["Expenses","Other Charges",d.otherCharges],["Expenses","Notes",d.expenseNotes],
+   ["Space","Selected Features",(d.features||[]).join("; ")],["Space","Windows",d.windows],["Space","Restrooms",d.restrooms],
+   ["Space","Ceiling Height",d.ceiling],["Space","Power",d.power],["Space","Roll-Up Doors",d.rollups],
+   ["Space","HVAC",d.hvac],["Space","Condition",d.condition],
+   ["Use","Permitted Uses",d.uses],["Use","Restrictions",d.restrictions],["Use","Other Tenants",d.otherTenants],
+   ["Use","Previous Use",d.previousUse],["Use","Target Tenant",d.targetTenant],
+   ["Parking","Parking",d.parking],["Parking","Parking Cost",d.parkingCost],["Parking","Signage",d.signage],
+   ["Parking","Exterior / Visibility",d.exterior],
+   ["Insurance","General Liability Required",d.cgl],["Insurance","Liability Limit",d.cglLimit],
+   ["Insurance","Additional Insured",d.additionalInsured],["Insurance","Certificate of Insurance",d.coi],
+   ["Insurance","Business Property Coverage",d.propertyCoverage],["Insurance","Workers Compensation",d.workersComp],
+   ["Insurance","Notes",d.insuranceNotes],
+   ["TI / Concessions","TI Allowance",d.ti],["TI / Concessions","Landlord Improvements",d.landlordWork],
+   ["TI / Concessions","Free / Reduced Rent",d.freeRent],["TI / Concessions","Other Concessions",d.concessions],
+   ["Freight Elevator","Available",d.freight],["Freight Elevator","Capacity",d.freightCapacity],
+   ["Freight Elevator","Dimensions",d.freightDimensions],["Freight Elevator","Floors Served",d.freightFloors],
+   ["Freight Elevator","Access / Hours",d.freightAccess],["Freight Elevator","Who Uses It",d.freightUsers],
+   ["Freight Elevator","Notes",d.freightNotes],
+   ["Passenger Elevator","Available",d.passenger],["Passenger Elevator","Floors Served",d.passengerFloors],
+   ["Passenger Elevator","Hours",d.passengerHours],["Passenger Elevator","Access Controls",d.passengerAccess],
+   ["Notes","General Notes",d.notes],
+   ["App Data","Restore Code",encodeData()]
+  ];
+  return rows.map(function(r){return r.map(csvEscape).join(",")}).join("\r\n");
 }
 
-async function shareBlobToFiles(blob, filename, title){
- const file=new File([blob],filename,{type:blob.type});
- if(navigator.canShare && navigator.canShare({files:[file]}) && navigator.share){
-   try{
-     await navigator.share({files:[file],title:title});
-     document.getElementById("status").textContent="Share sheet opened — choose Save to Files.";
-     return true;
-   }catch(err){
-     if(err && err.name==="AbortError") return true;
-   }
- }
- return false;
+/* ---------- saving files on iPhone ---------- */
+async function shareOrDownload(blob,filename,title){
+  try{
+    const file=new File([blob],filename,{type:blob.type});
+    if(navigator.canShare&&navigator.share&&navigator.canShare({files:[file]})){
+      await navigator.share({files:[file],title:title});
+      setStatus("Share sheet opened — pick “Save to Files”.");
+      return;
+    }
+  }catch(err){
+    if(err&&err.name==="AbortError"){setStatus("Save cancelled.");return}
+  }
+  const url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(function(){URL.revokeObjectURL(url)},1500);
+  setStatus("File downloaded — check Safari Downloads in Files.");
 }
 
-async function saveToFiles(){
- saveNotes();
- const filename=safeFileName();
- const blob=new Blob([readableSummary()],{type:"text/plain;charset=utf-8"});
- const shared=await shareBlobToFiles(blob,filename,"Commercial Property Notes");
- if(!shared){
-   const url=URL.createObjectURL(blob),a=document.createElement("a");
-   a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();
-   setTimeout(()=>URL.revokeObjectURL(url),1000);
-   document.getElementById("status").textContent="File downloaded. Check Safari Downloads / Files.";
- }
+/* ---------- buttons ---------- */
+function emailNotes(){
+  saveLocal();
+  const addr=(document.querySelector('[name="address"]').value||"").trim()||"Commercial Property";
+  const subject="Commercial Property Notes - "+addr;
+  const body=readableSummary(false);
+  const link=document.createElement("a");
+  link.href="mailto:?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body);
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setStatus("Opening Mail…");
 }
+
+function openFilePicker(){
+  const picker=document.getElementById("documentPicker");
+  picker.value="";
+  picker.click();
+}
+document.getElementById("documentPicker").addEventListener("change",function(e){
+  const f=e.target.files&&e.target.files[0];
+  if(!f){setStatus("No file selected.");return}
+  const reader=new FileReader();
+  reader.onload=function(){
+    const text=String(reader.result||"");
+    let data=decodeData(text);
+    if(!data&&/^\s*[{[]/.test(text)){try{data=JSON.parse(text)}catch(err){data=null}}
+    if(data&&applyData(data)){
+      saveLocal();
+      setStatus("Loaded "+f.name);
+    }else{
+      setStatus("No restore code in "+f.name+" — open a file this app saved.");
+    }
+  };
+  reader.onerror=function(){setStatus("Could not read that file.")};
+  reader.readAsText(f);
+});
 
 async function downloadCSV(){
- saveNotes();
- const filename=safeFileName().replace(/\.txt$/i,".csv");
- const blob=new Blob(["\ufeff"+buildCSV()],{type:"text/csv;charset=utf-8"});
- const shared=await shareBlobToFiles(blob,filename,"Commercial Property CSV");
- if(!shared){
-   const url=URL.createObjectURL(blob),a=document.createElement("a");
-   a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();
-   setTimeout(()=>URL.revokeObjectURL(url),1000);
-   document.getElementById("status").textContent="CSV downloaded. Check Safari Downloads / Files.";
- }
+  saveLocal();
+  const blob=new Blob(["\ufeff"+buildCSV()],{type:"text/csv;charset=utf-8"});
+  await shareOrDownload(blob,safeFileName(".csv"),"Commercial Property CSV");
 }
 
-updateUnknowns();restore();
+async function appSave(){
+  saveLocal();
+  const blob=new Blob([readableSummary(true)],{type:"text/plain;charset=utf-8"});
+  await shareOrDownload(blob,safeFileName(".txt"),"Commercial Property Notes");
+}
+
+/* ---------- new / clear ---------- */
+function clearForm(){
+  document.getElementById("propertyForm").reset();
+  document.querySelectorAll('input[name="feature"]').forEach(function(cb){cb.checked=false});
+  selectedPhotos=[];
+  document.getElementById("photoPreview").innerHTML="";
+  document.getElementById("photoCount").textContent="No photos selected.";
+  try{localStorage.removeItem(STORE_KEY)}catch(e){}
+  calcRent();updateUnknowns();
+}
+function newProperty(){
+  if(confirm("Start a new property? Save the current notes first if you need them.")){
+    clearForm();
+    setStatus("New property started.");
+  }
+}
+
+restore();
 </script>
 </body>
 </html>
