@@ -31,6 +31,10 @@ textarea{min-height:78px;resize:vertical}
 .pill{border:1px solid #cfd6e2;background:#fff;border-radius:999px;padding:8px 11px;font-size:12px;cursor:pointer;user-select:none}
 .pill.active{background:#1769e0 !important;border-color:#1769e0 !important;color:#fff !important;font-weight:800;box-shadow:0 2px 7px rgba(23,105,224,.25)}
 .pill{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.feature-pill{margin:0;display:inline-block;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.feature-pill input{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}
+.feature-pill span{display:block;border:1px solid #cfd6e2;background:#fff;border-radius:999px;padding:8px 11px;font-size:12px;color:#172033;user-select:none;-webkit-user-select:none}
+.feature-pill input:checked + span{background:#1769e0 !important;border-color:#1769e0 !important;color:#fff !important;font-weight:800;box-shadow:0 2px 7px rgba(23,105,224,.25)}
 .expenses{width:100%;border-collapse:collapse;font-size:12px}
 .expenses th,.expenses td{padding:8px 5px;border-bottom:1px solid #edf0f5;text-align:center}
 .expenses th:first-child,.expenses td:first-child{text-align:left}
@@ -103,7 +107,13 @@ button{border:0;border-radius:11px;padding:12px 10px;font-weight:750;cursor:poin
 <section class="card">
 <h2>SPACE / WALKTHROUGH</h2><div class="content">
  <div class="pills" data-group="features">
-  <span class="pill">Windows</span><span class="pill">HVAC</span><span class="pill">Restroom</span><span class="pill">Loading Area</span><span class="pill">Dock High</span><span class="pill">Ground Level</span><span class="pill">Street Visibility</span>
+  <label class="feature-pill"><input type="checkbox" name="feature" value="Windows"><span>Windows</span></label>
+  <label class="feature-pill"><input type="checkbox" name="feature" value="HVAC"><span>HVAC</span></label>
+  <label class="feature-pill"><input type="checkbox" name="feature" value="Restroom"><span>Restroom</span></label>
+  <label class="feature-pill"><input type="checkbox" name="feature" value="Loading Area"><span>Loading Area</span></label>
+  <label class="feature-pill"><input type="checkbox" name="feature" value="Dock High"><span>Dock High</span></label>
+  <label class="feature-pill"><input type="checkbox" name="feature" value="Ground Level"><span>Ground Level</span></label>
+  <label class="feature-pill"><input type="checkbox" name="feature" value="Street Visibility"><span>Street Visibility</span></label>
  </div>
  <div class="grid" style="margin-top:12px">
   <div><label>Windows / Natural Light</label><input name="windows" placeholder="Location / amount"></div>
@@ -225,12 +235,7 @@ function calcRent(){
  document.getElementById("annual").textContent=monthly?(monthly*12).toLocaleString("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0}):"$—";
 }
 ["sf","rent","rentBasis","rentPeriod"].forEach(id=>document.getElementById(id).addEventListener("input",calcRent));
-document.querySelectorAll(".pill").forEach(p=>{
- p.setAttribute("role","button");
- p.setAttribute("tabindex","0");
- const toggle=()=>p.classList.toggle("active");
- p.addEventListener("click",toggle);
- p.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();toggle();}});
+
 });
 function updateUnknowns(){
  const u=[...document.querySelectorAll(".expenseSelect")].filter(s=>s.value==="Unknown").map(s=>s.dataset.label);
@@ -262,7 +267,7 @@ document.getElementById("photoLibrary").addEventListener("change",e=>addPhotos(e
 document.getElementById("photoCamera").addEventListener("change",e=>addPhotos(e.target.files));
 function formData(){
  const data=Object.fromEntries(new FormData(document.getElementById("propertyForm")).entries());
- data.features=[...document.querySelectorAll(".pill.active")].map(x=>x.textContent);
+ data.features=[...document.querySelectorAll('input[name="feature"]:checked')].map(x=>x.value);
  data.savedAt=new Date().toISOString();
  return data;
 }
@@ -279,13 +284,13 @@ function restore(){
    if(Array.isArray(v))return;
    const el=f.elements[k]; if(el)el.value=v;
  });
- document.querySelectorAll(".pill").forEach(p=>p.classList.toggle("active",(d.features||[]).includes(p.textContent)));
+ document.querySelectorAll('input[name="feature"]').forEach(cb=>cb.checked=(d.features||[]).includes(cb.value));
  calcRent(); updateUnknowns();
 }
 function clearForm(){
  if(!confirm("Clear all notes for this property?"))return;
  document.getElementById("propertyForm").reset();
- document.querySelectorAll(".pill").forEach(p=>p.classList.remove("active"));
+ document.querySelectorAll('input[name="feature"]').forEach(cb=>cb.checked=false);
  localStorage.removeItem("commercialPropertyNotes_current"); calcRent();updateUnknowns();
  document.getElementById("status").textContent="Form cleared.";
 }
