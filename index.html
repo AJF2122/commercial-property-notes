@@ -29,7 +29,8 @@ textarea{min-height:78px;resize:vertical}
 .question{background:#f8fafc;border-left:4px solid var(--accent);padding:10px 12px;border-radius:8px;font-size:13px;line-height:1.4;margin-bottom:12px}
 .pills{display:flex;flex-wrap:wrap;gap:7px}
 .pill{border:1px solid #cfd6e2;background:#fff;border-radius:999px;padding:8px 11px;font-size:12px;cursor:pointer;user-select:none}
-.pill.active{background:var(--accent2);border-color:var(--accent);color:#0d55ba;font-weight:700}
+.pill.active{background:#1769e0 !important;border-color:#1769e0 !important;color:#fff !important;font-weight:800;box-shadow:0 2px 7px rgba(23,105,224,.25)}
+.pill{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .expenses{width:100%;border-collapse:collapse;font-size:12px}
 .expenses th,.expenses td{padding:8px 5px;border-bottom:1px solid #edf0f5;text-align:center}
 .expenses th:first-child,.expenses td:first-child{text-align:left}
@@ -132,6 +133,21 @@ button{border:0;border-radius:11px;padding:12px 10px;font-weight:750;cursor:poin
  <div class="full"><label>Exterior / Visibility Notes</label><textarea name="exterior"></textarea></div>
 </div></section>
 
+
+<section class="card">
+<h2>COMMERCIAL INSURANCE</h2><div class="content">
+ <div class="question">“What insurance requirements does the landlord have for the tenant?”</div>
+ <div class="grid">
+  <div><label>General Liability Required?</label><select name="cgl"><option>Unknown</option><option>Yes</option><option>No</option></select></div>
+  <div><label>Required Liability Limit</label><input name="cglLimit" placeholder="e.g. $1M / $2M"></div>
+  <div><label>Landlord Named Additional Insured?</label><select name="additionalInsured"><option>Unknown</option><option>Yes</option><option>No</option></select></div>
+  <div><label>Proof / Certificate of Insurance Required?</label><select name="coi"><option>Unknown</option><option>Yes</option><option>No</option></select></div>
+  <div><label>Business Property / Contents Coverage?</label><select name="propertyCoverage"><option>Unknown</option><option>Required</option><option>Not Required</option></select></div>
+  <div><label>Workers' Compensation?</label><select name="workersComp"><option>Unknown</option><option>Required</option><option>Not Required / N/A</option></select></div>
+  <div class="full"><label>Other Insurance Requirements / Notes</label><textarea name="insuranceNotes" placeholder="Umbrella, auto, special coverage, limits, landlord requirements, etc."></textarea></div>
+ </div>
+</div></section>
+
 <section class="card">
 <h2>TI & CONCESSIONS</h2><div class="content">
  <div class="question">“Is the landlord offering any tenant improvement allowance or willing to do any improvements to the space?”</div>
@@ -164,8 +180,13 @@ button{border:0;border-radius:11px;padding:12px 10px;font-weight:750;cursor:poin
 
 <section class="card">
 <h2>PHOTOS & GENERAL NOTES</h2><div class="content">
- <input id="photoInput" type="file" accept="image/*" capture="environment" multiple>
- <div class="photoNote" id="photoCount">No photos selected. Photos are not stored in this demo after closing the page.</div>
+ <div class="grid">
+  <div><label>Upload Existing Photos</label><input id="photoLibrary" type="file" accept="image/*" multiple></div>
+  <div><label>Take New Photo</label><input id="photoCamera" type="file" accept="image/*" capture="environment"></div>
+ </div>
+ <div class="photoNote" id="photoCount">No photos selected.</div>
+ <div id="photoPreview" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px"></div>
+ <div class="photoNote"><b>Existing photos:</b> tap “Choose Files” and select Photo Library on iPhone. <b>New photo:</b> use the camera field. Photo previews are for this session; use your original Photos app images for permanent storage.</div>
  <label style="margin-top:14px">General Notes</label><textarea name="notes" style="min-height:140px" placeholder="Anything else from the walkthrough or conversation..."></textarea>
 </div></section>
 
@@ -204,7 +225,13 @@ function calcRent(){
  document.getElementById("annual").textContent=monthly?(monthly*12).toLocaleString("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0}):"$—";
 }
 ["sf","rent","rentBasis","rentPeriod"].forEach(id=>document.getElementById(id).addEventListener("input",calcRent));
-document.querySelectorAll(".pill").forEach(p=>p.addEventListener("click",()=>p.classList.toggle("active")));
+document.querySelectorAll(".pill").forEach(p=>{
+ p.setAttribute("role","button");
+ p.setAttribute("tabindex","0");
+ const toggle=()=>p.classList.toggle("active");
+ p.addEventListener("click",toggle);
+ p.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();toggle();}});
+});
 function updateUnknowns(){
  const u=[...document.querySelectorAll(".expenseSelect")].filter(s=>s.value==="Unknown").map(s=>s.dataset.label);
  const ul=document.getElementById("unknownList"); ul.innerHTML="";
@@ -212,9 +239,27 @@ function updateUnknowns(){
  else u.forEach(x=>{const li=document.createElement("li");li.textContent=x+" expense responsibility";ul.appendChild(li)});
 }
 document.addEventListener("change",e=>{if(e.target.classList.contains("expenseSelect"))updateUnknowns()});
-document.getElementById("photoInput").addEventListener("change",e=>{
- document.getElementById("photoCount").textContent=e.target.files.length?`${e.target.files.length} photo(s) selected for this walkthrough.`:"No photos selected.";
-});
+let selectedPhotos=[];
+function addPhotos(files){
+ [...files].forEach(file=>{
+   if(file.type.startsWith("image/")) selectedPhotos.push(file);
+ });
+ document.getElementById("photoCount").textContent=selectedPhotos.length?`${selectedPhotos.length} photo(s) selected.`:"No photos selected.";
+ const preview=document.getElementById("photoPreview");
+ preview.innerHTML="";
+ selectedPhotos.forEach((file,i)=>{
+   const wrap=document.createElement("div");
+   wrap.style.position="relative";
+   const img=document.createElement("img");
+   img.src=URL.createObjectURL(file);
+   img.style.cssText="width:100%;height:95px;object-fit:cover;border-radius:10px;border:1px solid #dfe4ec";
+   img.onload=()=>URL.revokeObjectURL(img.src);
+   wrap.appendChild(img);
+   preview.appendChild(wrap);
+ });
+}
+document.getElementById("photoLibrary").addEventListener("change",e=>addPhotos(e.target.files));
+document.getElementById("photoCamera").addEventListener("change",e=>addPhotos(e.target.files));
 function formData(){
  const data=Object.fromEntries(new FormData(document.getElementById("propertyForm")).entries());
  data.features=[...document.querySelectorAll(".pill.active")].map(x=>x.textContent);
